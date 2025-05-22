@@ -4,9 +4,11 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { ImageUpscale, Upload } from 'lucide-react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const Navbar = () => {
     const router = useRouter();
+    const isMobile = useIsMobile();
 
     return (
         <nav>
@@ -19,7 +21,7 @@ const Navbar = () => {
                         className="flex cursor-pointer items-center gap-2"
                     >
                         <Upload className="h-4 w-4" />
-                        Upload
+                        {!isMobile && 'Upload'}
                     </Button>
                 </div>
                 <div className="ml-auto flex items-center space-x-4">
@@ -30,7 +32,7 @@ const Navbar = () => {
                         className="flex cursor-pointer items-center gap-2"
                     >
                         <ImageUpscale className="h-4 w-4" />
-                        Transform
+                        {!isMobile && 'Transform'}
                     </Button>
                 </div>
             </div>
