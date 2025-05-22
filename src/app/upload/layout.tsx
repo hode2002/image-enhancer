@@ -7,6 +7,6 @@ export const generateMetadata = async (): Promise<Metadata> => {
     };
 };
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+export default function UploadLayout({ children }: { children: React.ReactNode }) {
     return <>{children}</>;
 }
