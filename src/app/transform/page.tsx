@@ -9,7 +9,7 @@ export default async function TransformPage() {
             <div className="space-y-6">
                 <div>
                     <h1 className="text-3xl font-bold">Transform Images</h1>
-                    <p className="text-muted-foreground">Choose and transform your images</p>
+                    <p className="text-muted-foreground">Select an image to transform</p>
                 </div>
 
                 <ImageGrid images={images} />
