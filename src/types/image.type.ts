@@ -37,7 +37,7 @@ export type TransformOptions = {
         width: number;
         height: number;
     };
-    enhance: boolean;
+    enhance: '2x' | '4x' | '8x';
 };
 
 export type TransformImage = {
@@ -60,7 +60,7 @@ export type TransformImage = {
         width: number;
         height: number;
     };
-    enhance: boolean;
+    enhance: '2x' | '4x' | '8x';
     options: string;
     createdAt: string;
 };

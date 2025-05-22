@@ -36,8 +36,8 @@ export const convertQueryToTransformOption = (query: string): TransformOptions =
     const params = new URLSearchParams(query);
 
     const options: TransformOptions = {
-        w: params.get('w') ? parseInt(params.get('width')!) : undefined,
-        h: params.get('h') ? parseInt(params.get('height')!) : undefined,
+        w: params.get('w') ? parseInt(params.get('w')!) : undefined,
+        h: params.get('h') ? parseInt(params.get('h')!) : undefined,
         format: (params.get('format') as TransformOptions['format']) || 'jpeg',
         fit: (params.get('fit') as TransformOptions['fit']) || 'cover',
         quality: params.get('quality') ? parseInt(params.get('quality')!) : 80,
@@ -45,7 +45,7 @@ export const convertQueryToTransformOption = (query: string): TransformOptions =
         blur: params.get('blur') ? parseInt(params.get('blur')!) : 0,
         sharpen: params.get('sharpen') === 'true',
         rotate: params.get('rotate') ? parseInt(params.get('rotate')!) : 0,
-        enhance: params.get('enhance') === 'true',
+        enhance: (params.get('enhance') as '2x' | '4x' | '8x') || '2x',
     };
 
     const cropLeft = params.get('crop.left');

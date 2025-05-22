@@ -14,5 +14,5 @@ export type TransformQuery = {
         width: number;
         height: number;
     };
-    enhance?: boolean;
+    enhance?: '2x' | '4x' | '8x';
 };
