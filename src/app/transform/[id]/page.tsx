@@ -133,6 +133,7 @@ export default function TransformPage({ params }: props) {
                                     src={previewUrl}
                                     alt="Preview"
                                     fill
+                                    unoptimized
                                     className="object-contain"
                                     sizes="(max-width: 768px) 100vw, 50vw"
                                 />
@@ -171,6 +172,7 @@ export default function TransformPage({ params }: props) {
                     originalWidth={image.width}
                     originalHeight={image.height}
                 />
+
                 <a hidden ref={downloadBtnRef} />
             </div>
         </div>
