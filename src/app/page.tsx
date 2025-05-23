@@ -1,13 +1,11 @@
-'use client';
-
+import { GenerateForm } from '@/components/GenerateForm';
 import { Button } from '@/components/ui/button';
-import { UploadForm } from '@/components/UploadForm';
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
 export default function Home() {
     return (
-        <div className="flex min-h-screen flex-col">
+        <div className="flex min-h-screen flex-col py-8">
             <section className="flex flex-col items-center justify-center space-y-4 px-4 py-24 text-center">
                 <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl">
                     Transform Your Images with{' '}
@@ -31,12 +29,10 @@ export default function Home() {
                 </div>
             </section>
 
-            <section className="container mx-auto max-w-4xl px-4 py-12">
-                <div className="bg-card rounded-lg border p-6 shadow-sm">
-                    <h2 className="mb-6 text-2xl font-semibold">Upload Your Image</h2>
-                    <UploadForm />
-                </div>
-            </section>
+            <div className="bg-card container mx-auto rounded-lg border p-6 shadow-sm">
+                <h2 className="mb-6 text-2xl font-semibold">Generate Image With AI</h2>
+                <GenerateForm />
+            </div>
         </div>
     );
 }

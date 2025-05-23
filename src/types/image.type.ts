@@ -64,3 +64,14 @@ export type TransformImage = {
     options: string;
     createdAt: string;
 };
+
+export type AIGenerateOptions = {
+    prompt: string;
+    seed?: number;
+    randomize?: boolean;
+    width?: number;
+    height?: number;
+    guidanceScale?: number;
+    numInferenceSteps?: number;
+    serverChoice?: string;
+};
