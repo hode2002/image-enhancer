@@ -8,7 +8,13 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
-const ImageGrid = ({ images }: { images: ImageFull[] }) => {
+interface props {
+    label: string;
+    images: ImageFull[];
+    urlToRedirect: string;
+}
+
+const ImageGrid = ({ label, images, urlToRedirect }: props) => {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(true);
 
@@ -27,8 +33,8 @@ const ImageGrid = ({ images }: { images: ImageFull[] }) => {
         fetchImages();
     }, []);
 
-    const handleTransform = (imageId: string) => {
-        router.push(`/transform/${imageId}`);
+    const handleRedirect = (imageId: string) => {
+        router.push(`${urlToRedirect}/${imageId}`);
     };
 
     return (
@@ -58,9 +64,9 @@ const ImageGrid = ({ images }: { images: ImageFull[] }) => {
                                     className="cursor-pointer"
                                     variant="secondary"
                                     size="sm"
-                                    onClick={() => handleTransform(image.id)}
+                                    onClick={() => handleRedirect(image.id)}
                                 >
-                                    Transform
+                                    {label}
                                 </Button>
                             </div>
                         </div>
