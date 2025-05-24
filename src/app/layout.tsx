@@ -51,8 +51,12 @@ export const metadata: Metadata = {
         siteName: 'Image Enhancer',
     },
     icons: {
-        icon: [{ url: '/logo.png', type: 'image/png' }],
-        apple: [{ url: '/icon.png' }],
+        icon: [
+            { url: '/favicon.ico' },
+            { url: '/favicon-32x32.png', type: 'image/png' },
+            { url: '/favicon-16x16.png', type: 'image/png' },
+        ],
+        apple: [{ url: '/apple-touch-icon.png', sizes: '180x180' }],
     },
     manifest: '/manifest.json',
     robots: {
