@@ -14,7 +14,9 @@ httpClient.interceptors.request.use(
         try {
             const clerk = new Clerk(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY!);
             await clerk.load();
-            const token = await clerk.session?.getToken();
+            const token = await clerk.session?.getToken({
+                template: process.env.NEXT_PUBLIC_CLERK_TEMPLATE,
+            });
             if (token) {
                 config.headers.Authorization = `Bearer ${token}`;
             }

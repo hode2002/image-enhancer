@@ -15,7 +15,9 @@ httpServer.interceptors.request.use(
     async (config: InternalAxiosRequestConfig) => {
         try {
             const { getToken } = await auth();
-            const token = await getToken();
+            const token = await getToken({
+                template: process.env.NEXT_PUBLIC_CLERK_TEMPLATE,
+            });
             if (token) {
                 config.headers.Authorization = `Bearer ${token}`;
             }
