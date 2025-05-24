@@ -1,0 +1,31 @@
+import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
+import { Clerk } from '@clerk/clerk-js';
+
+const httpClient = axios.create({
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    baseURL: process.env.NEXT_PUBLIC_API_URL,
+    withCredentials: true,
+});
+
+httpClient.interceptors.request.use(
+    async (config: InternalAxiosRequestConfig) => {
+        try {
+            const clerk = new Clerk(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY!);
+            await clerk.load();
+            const token = await clerk.session?.getToken();
+            if (token) {
+                config.headers.Authorization = `Bearer ${token}`;
+            }
+            return config;
+        } catch (error) {
+            return Promise.reject(error);
+        }
+    },
+    (error: AxiosError) => {
+        return Promise.reject(error);
+    },
+);
+
+export default httpClient;
