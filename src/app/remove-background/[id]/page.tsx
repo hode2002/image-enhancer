@@ -48,6 +48,7 @@ const RemoveBackgroundDetail = ({ params }: Props) => {
     const [processedUrl, setProcessedUrl] = useState<string>('');
     const [isOpen, setIsOpen] = useState(false);
     const downloadBtnRef = React.useRef<HTMLAnchorElement>(null);
+    const [isDownloading, setIsDownloading] = useState(false);
 
     useEffect(() => {
         const fetchImage = async () => {
@@ -129,6 +130,7 @@ const RemoveBackgroundDetail = ({ params }: Props) => {
     const handleDownload = async () => {
         if (!processedUrl || !downloadBtnRef.current) return;
 
+        setIsDownloading(true);
         try {
             const response = await fetch(processedUrl);
             const blob = await response.blob();
@@ -143,6 +145,8 @@ const RemoveBackgroundDetail = ({ params }: Props) => {
         } catch (error) {
             console.error('Download failed:', error);
             toast.error('Failed to download image');
+        } finally {
+            setIsDownloading(false);
         }
     };
 
@@ -179,26 +183,40 @@ const RemoveBackgroundDetail = ({ params }: Props) => {
                     Back to Gallery
                 </Button>
                 <div className="flex items-center gap-4">
-                    <Button
-                        variant="default"
-                        className="cursor-pointer"
-                        onClick={handleProcess}
-                        disabled={isProcessing}
-                    >
-                        {isProcessing ? (
-                            <>
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                Processing...
-                            </>
-                        ) : (
-                            'Remove Background'
-                        )}
-                    </Button>
-                    {processedUrl && (
+                    {!processedUrl ? (
+                        <Button
+                            variant="default"
+                            className="cursor-pointer"
+                            onClick={handleProcess}
+                            disabled={isProcessing}
+                        >
+                            {isProcessing ? (
+                                <>
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    Processing...
+                                </>
+                            ) : (
+                                'Remove Background'
+                            )}
+                        </Button>
+                    ) : (
                         <>
-                            <Button onClick={handleDownload} className="cursor-pointer">
-                                <Download className="mr-2 h-4 w-4" />
-                                Download
+                            <Button
+                                onClick={handleDownload}
+                                className="cursor-pointer"
+                                disabled={isDownloading}
+                            >
+                                {isDownloading ? (
+                                    <>
+                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                        Downloading...
+                                    </>
+                                ) : (
+                                    <>
+                                        <Download className="mr-2 h-4 w-4" />
+                                        Download
+                                    </>
+                                )}
                             </Button>
                             <Button onClick={handleClear} className="cursor-pointer">
                                 <Trash className="mr-2 h-4 w-4" />
@@ -230,7 +248,7 @@ const RemoveBackgroundDetail = ({ params }: Props) => {
                                         src={previewUrl}
                                         alt="Preview"
                                         fill
-                                        className="object-contain"
+                                        className="rounded-2xl object-contain"
                                         sizes="(max-width: 768px) 100vw, 50vw"
                                     />
                                 ) : (
