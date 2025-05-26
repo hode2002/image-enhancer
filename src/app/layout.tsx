@@ -8,7 +8,6 @@ import Header from '@/components/Header';
 import { ThemeProvider } from '@/components/providers/ThemeProvider';
 import { Inter } from 'next/font/google';
 import Footer from '@/components/Footer';
-import { KeepAlive } from '@/components/KeepAlive';
 
 const geistSans = Geist({
     variable: '--font-geist-sans',
@@ -83,7 +82,6 @@ export default function RootLayout({
                         enableSystem
                         disableTransitionOnChange
                     >
-                        <KeepAlive />
                         <Header />
                         <main className="min-h-screen">{children}</main>
                         <Toaster />
