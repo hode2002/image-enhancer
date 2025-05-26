@@ -1,9 +1,6 @@
 import ImageGrid from '@/components/ImageGrid';
-import { getUserImage } from '@/lib/api/image';
 
 export default async function RemoveBackgroundPage() {
-    const images = await getUserImage();
-
     return (
         <div className="container mx-auto max-w-7xl py-10">
             <div className="space-y-6">
@@ -12,11 +9,7 @@ export default async function RemoveBackgroundPage() {
                     <p className="text-muted-foreground">Select an image to remove</p>
                 </div>
 
-                <ImageGrid
-                    label="Remove Background"
-                    images={images}
-                    urlToRedirect="/remove-background"
-                />
+                <ImageGrid label="Remove Background" urlToRedirect="/remove-background" />
             </div>
         </div>
     );

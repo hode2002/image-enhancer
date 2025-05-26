@@ -1,9 +1,6 @@
 import ImageGrid from '@/components/ImageGrid';
-import { getUserImage } from '@/lib/api/image';
 
 export default async function TransformPage() {
-    const images = await getUserImage();
-
     return (
         <div className="container mx-auto max-w-7xl py-10">
             <div className="space-y-6">
@@ -12,7 +9,7 @@ export default async function TransformPage() {
                     <p className="text-muted-foreground">Select an image to transform</p>
                 </div>
 
-                <ImageGrid label="Transform" images={images} urlToRedirect="/transform" />
+                <ImageGrid label="Transform" urlToRedirect="/transform" />
             </div>
         </div>
     );

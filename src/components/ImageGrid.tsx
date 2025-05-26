@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { getUserImage } from '@/lib/api/image';
 import { ImageFull } from '@/types/image.type';
 import { ImageIcon, Loader2 } from 'lucide-react';
 import Image from 'next/image';
@@ -10,17 +11,19 @@ import { toast } from 'sonner';
 
 interface props {
     label: string;
-    images: ImageFull[];
     urlToRedirect: string;
 }
 
-const ImageGrid = ({ label, images, urlToRedirect }: props) => {
+const ImageGrid = ({ label, urlToRedirect }: props) => {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(true);
+    const [images, setImages] = useState<ImageFull[]>([]);
 
     useEffect(() => {
         const fetchImages = async () => {
             try {
+                const userImages = await getUserImage();
+                setImages(userImages);
                 setIsLoading(true);
             } catch (error) {
                 console.error('Error fetching images:', error);
