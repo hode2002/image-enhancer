@@ -20,7 +20,6 @@ httpClient.interceptors.request.use(
             const token = await clerk.session?.getToken({
                 template: process.env.NEXT_PUBLIC_CLERK_TEMPLATE,
             });
-            console.log('httpClient', token);
 
             if (token) {
                 config.headers.Authorization = `Bearer ${token}`;

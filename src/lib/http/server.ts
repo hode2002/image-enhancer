@@ -16,7 +16,6 @@ httpServer.interceptors.request.use(
             const token = await getToken({
                 template: process.env.NEXT_PUBLIC_CLERK_TEMPLATE,
             });
-            console.log('httpServer', token);
 
             if (token) {
                 config.headers.Authorization = `Bearer ${token}`;
