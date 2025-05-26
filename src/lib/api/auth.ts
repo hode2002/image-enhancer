@@ -1,8 +1,8 @@
-import http from '@/lib/http';
+import { httpClient } from '@/lib/http/client';
 import { AxiosResponse } from 'axios';
 
 const prefix = '/auth';
 
 export const login = async (): Promise<AxiosResponse> => {
-    return http.post(`${prefix}/login`);
+    return httpClient.post(`${prefix}/login`);
 };

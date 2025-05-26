@@ -1,14 +1,12 @@
-'use server';
-
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { auth } from '@clerk/nextjs/server';
 
 const httpServer = axios.create({
+    baseURL: process.env.NEXT_PUBLIC_API_URL,
+    withCredentials: true,
     headers: {
         'Content-Type': 'application/json',
     },
-    baseURL: process.env.NEXT_PUBLIC_API_URL,
-    withCredentials: true,
 });
 
 httpServer.interceptors.request.use(
@@ -18,17 +16,18 @@ httpServer.interceptors.request.use(
             const token = await getToken({
                 template: process.env.NEXT_PUBLIC_CLERK_TEMPLATE,
             });
+            console.log('httpServer', token);
+
             if (token) {
                 config.headers.Authorization = `Bearer ${token}`;
             }
-            return config;
         } catch (error) {
-            return Promise.reject(error);
+            console.error('Error getting server token', error);
         }
+
+        return config;
     },
-    (error: AxiosError) => {
-        return Promise.reject(error);
-    },
+    (error: AxiosError) => Promise.reject(error),
 );
 
-export default httpServer;
+export { httpServer };
