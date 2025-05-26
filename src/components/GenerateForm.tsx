@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Loader2, Wand2, ChevronDown, ChevronUp } from 'lucide-react';
+import { Loader2, Wand2, ChevronDown, ChevronUp, Info } from 'lucide-react';
 import Image from 'next/image';
 import { toast } from 'sonner';
 import { Progress } from '@/components/ui/progress';
@@ -17,6 +17,7 @@ import { Slider } from '@/components/ui/slider';
 import { uploadImageByUrl } from '@/lib/api/media';
 import { useAuth } from '@clerk/nextjs';
 import { AxiosProgressEvent } from 'axios';
+import { useIsMobile } from '../hooks/use-mobile';
 import {
     Select,
     SelectContent,
@@ -24,6 +25,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 interface GeneratedImage {
     id: string;
@@ -50,6 +52,7 @@ export const GenerateForm = () => {
     const [prompt, setPrompt] = useState(
         'A highly detailed and realistic scene of a majestic Tyrannosaurus Rex standing in a lush, prehistoric jungle at sunset, with vibrant green ferns, towering palm trees, and mist gently rising from the ground. The T-Rex has textured, scaly skin with earthy tones of green and brown, sharp claws, and piercing yellow eyes. The background features a glowing orange and purple sky, with distant mountains and a small herd of smaller dinosaurs grazing. Cinematic lighting, ultra-realistic, 4K resolution, photorealistic style',
     );
+    const isMobile = useIsMobile();
     const [isGenerating, setIsGenerating] = useState(false);
     const [progress, setProgress] = useState(0);
     const [generatedImage, setGeneratedImage] = useState<GeneratedImage | null>(null);
@@ -167,11 +170,30 @@ export const GenerateForm = () => {
 
                     {selectedModel === 'fluxPro' && (
                         <div className="space-y-2">
-                            <Label htmlFor="server">
-                                Server Choice -{' '}
-                                <span className="text-sm text-gray-300">
-                                    switch between servers if one is slow or fails:
-                                </span>
+                            <Label htmlFor="server" className="text-nowrap">
+                                Server Choice
+                                {isMobile ? (
+                                    <Popover>
+                                        <PopoverTrigger asChild>
+                                            <Button
+                                                size="icon"
+                                                variant={'ghost'}
+                                                title="switch between servers if one is slow or fails:"
+                                            >
+                                                <Info />
+                                            </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-80">
+                                            <p className="text-sm">
+                                                Switch between servers if one is slow or fails
+                                            </p>
+                                        </PopoverContent>
+                                    </Popover>
+                                ) : (
+                                    <span className="text-sm text-gray-300">
+                                        - Switch between servers if one is slow or fails:
+                                    </span>
+                                )}
                             </Label>
                             <Select
                                 value={selectedServer}
@@ -314,7 +336,7 @@ export const GenerateForm = () => {
                                         onCheckedChange={checked =>
                                             setOptions(prev => ({
                                                 ...prev,
-                                                randomizeSeed: checked,
+                                                randomize: checked,
                                             }))
                                         }
                                         disabled={isGenerating}
