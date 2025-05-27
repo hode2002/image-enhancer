@@ -124,7 +124,7 @@ export const GenerateForm = () => {
             console.log(response);
             const newImage: GeneratedImage = {
                 id: Date.now().toString(),
-                url: generatedImageUrl,
+                url: response.originalUrl,
                 prompt: prompt,
                 createdAt: new Date().toISOString(),
             };
