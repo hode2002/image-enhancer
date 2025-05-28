@@ -5,6 +5,9 @@ on:
     branches:
       - main
 
+env:
+  CONTAINER_NAME: client
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -46,11 +49,12 @@ jobs:
           script: |
             set -e
             cd app/client
+            docker stop ${{ env.CONTAINER_NAME }} || true
+            docker rm ${{ env.CONTAINER_NAME }} || true
+            docker rmi ${{ secrets.IMAGE_NAME }} || true
             docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.IMAGE_NAME }}:latest
-            docker stop ${{ secrets.IMAGE_NAME }} || true
-            docker rm ${{ secrets.IMAGE_NAME }} || true
             docker run -d \
-              --name ${{ secrets.IMAGE_NAME }} \
+              --name ${{ env.CONTAINER_NAME }} \
               --restart unless-stopped \
               -p 3000:3000 \
               --env-file .env.production \
