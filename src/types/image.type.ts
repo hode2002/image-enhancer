@@ -75,3 +75,7 @@ export type AIGenerateOptions = {
     numInferenceSteps?: number;
     serverChoice?: string;
 };
+
+export type DeleteImageResponse = {
+    message: string;
+};

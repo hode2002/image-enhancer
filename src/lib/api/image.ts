@@ -86,3 +86,14 @@ export const AIRemoveBackground = async (
 
     return response.data;
 };
+
+export const deleteImage = async (
+    imageId: string,
+    onProgress?: (progressEvent: AxiosProgressEvent) => void,
+): Promise<ImageFull> => {
+    const response = await httpClient.delete<BaseResponse<ImageFull>>(`${prefix}/${imageId}`, {
+        onUploadProgress: onProgress,
+    });
+
+    return response.data.data;
+};

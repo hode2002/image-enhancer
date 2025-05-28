@@ -1,13 +1,23 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { getUserImage } from '@/lib/api/image';
+import { deleteImage, getUserImage } from '@/lib/api/image';
 import { ImageFull } from '@/types/image.type';
-import { ImageIcon, Loader2 } from 'lucide-react';
+import { ImageIcon, Loader2, Trash } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 
 interface props {
     label: string;
@@ -18,17 +28,19 @@ const ImageGrid = ({ label, urlToRedirect }: props) => {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(true);
     const [images, setImages] = useState<ImageFull[]>([]);
+    const [imageToDeleteId, setImageToDeleteId] = useState<string | null>(null);
+    const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     useEffect(() => {
         const fetchImages = async () => {
             try {
                 const userImages = await getUserImage();
                 setImages(userImages);
-                setIsLoading(true);
+                setIsLoading(false);
             } catch (error) {
                 console.error('Error fetching images:', error);
                 toast.error('Failed to load images');
-            } finally {
                 setIsLoading(false);
             }
         };
@@ -38,6 +50,35 @@ const ImageGrid = ({ label, urlToRedirect }: props) => {
 
     const handleRedirect = (imageId: string) => {
         router.push(`${urlToRedirect}/${imageId}`);
+    };
+
+    const handleDeleteClick = (imageId: string) => {
+        setImageToDeleteId(imageId);
+        setShowConfirmDelete(true);
+    };
+
+    const confirmDelete = async () => {
+        if (!imageToDeleteId) return;
+
+        setIsDeleting(true);
+        try {
+            const { id } = await deleteImage(imageToDeleteId);
+            setImages(prev => prev.filter(image => image.id !== id));
+            if (id) {
+                toast.success('Image deleted successfully');
+            }
+        } catch (error) {
+            console.error('Error deleting image:', error);
+            toast.error('Failed to delete image');
+        } finally {
+            setIsDeleting(false);
+            setImageToDeleteId(null);
+            setShowConfirmDelete(false);
+        }
+    };
+
+    const cancelDelete = () => {
+        setImageToDeleteId(null);
     };
 
     return (
@@ -55,21 +96,33 @@ const ImageGrid = ({ label, urlToRedirect }: props) => {
             {!isLoading && (
                 <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
                     {images.map(image => (
-                        <div key={image.id} className="group relative aspect-square">
+                        <div
+                            key={image.id}
+                            data-id={image.id}
+                            className="group relative aspect-square"
+                        >
                             <Image
                                 src={image.originalUrl}
                                 alt={`Image ${image.id}`}
                                 fill
                                 className="rounded-lg object-cover"
                             />
-                            <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-black/50 opacity-0 transition-opacity group-hover:opacity-100">
+                            <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 rounded-lg bg-black/50 opacity-0 transition-opacity group-hover:opacity-100">
                                 <Button
                                     className="cursor-pointer"
                                     variant="secondary"
-                                    size="sm"
+                                    size="default"
                                     onClick={() => handleRedirect(image.id)}
                                 >
                                     {label}
+                                </Button>
+                                <Button
+                                    className="cursor-pointer"
+                                    variant="destructive"
+                                    size="icon"
+                                    onClick={() => handleDeleteClick(image.id)}
+                                >
+                                    <Trash />
                                 </Button>
                             </div>
                         </div>
@@ -86,6 +139,37 @@ const ImageGrid = ({ label, urlToRedirect }: props) => {
                     </p>
                 </div>
             )}
+
+            <AlertDialog open={showConfirmDelete} onOpenChange={setShowConfirmDelete}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            This action cannot be undone. This will permanently delete your image.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel
+                            onClick={cancelDelete}
+                            disabled={isDeleting}
+                            className="cursor-pointer"
+                        >
+                            Cancel
+                        </AlertDialogCancel>
+                        <AlertDialogAction
+                            onClick={confirmDelete}
+                            disabled={isDeleting}
+                            className="cursor-pointer bg-red-500 text-white hover:bg-red-600"
+                        >
+                            {isDeleting ? (
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            ) : (
+                                'Delete'
+                            )}
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </>
     );
 };
