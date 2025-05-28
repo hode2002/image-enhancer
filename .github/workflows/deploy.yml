@@ -45,6 +45,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             set -e
+            cd app/client
             docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.IMAGE_NAME }}:latest
             docker stop ${{ secrets.IMAGE_NAME }} || true
             docker rm ${{ secrets.IMAGE_NAME }} || true
