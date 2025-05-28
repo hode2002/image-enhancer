@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Loader2, Wand2, ChevronDown, ChevronUp, Info } from 'lucide-react';
+import { Loader2, Wand2, ChevronDown, ChevronUp, Info, Sparkles } from 'lucide-react';
 import Image from 'next/image';
 import { toast } from 'sonner';
 import { Progress } from '@/components/ui/progress';
@@ -26,6 +26,7 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { AIGenerateText } from '@/lib/api/text-generator';
 
 interface GeneratedImage {
     id: string;
@@ -70,6 +71,7 @@ export const GenerateForm = () => {
         seed: 0,
         serverChoice: 'Google US Server',
     });
+    const [isEnhancingPrompt, setIsEnhancingPrompt] = useState(false);
 
     const onProgress = (progressEvent: AxiosProgressEvent, loaded: number) => {
         const progress = Math.round((progressEvent.loaded * loaded) / (progressEvent.total || 1));
@@ -141,6 +143,28 @@ export const GenerateForm = () => {
         }
     };
 
+    const handleEnhancePrompt = async () => {
+        if (!prompt.trim()) {
+            toast.warning('Please enter a prompt to enhance.');
+            return;
+        }
+
+        setIsEnhancingPrompt(true);
+        try {
+            const {
+                data: { prompt: enhancedText },
+            } = await AIGenerateText(prompt, 100);
+
+            setPrompt(enhancedText);
+            toast.success('Prompt enhanced!');
+        } catch (error) {
+            console.error('Error enhancing prompt:', error);
+            toast.error('Failed to enhance prompt.');
+        } finally {
+            setIsEnhancingPrompt(false);
+        }
+    };
+
     return (
         <div className="grid gap-8 lg:grid-cols-2">
             {/* Prompt Input */}
@@ -151,7 +175,7 @@ export const GenerateForm = () => {
                         <Select
                             value={selectedModel}
                             onValueChange={setSelectedModel}
-                            disabled={isGenerating}
+                            disabled={isGenerating || isEnhancingPrompt}
                         >
                             <SelectTrigger id="model">
                                 <SelectValue placeholder="Select a model" />
@@ -214,20 +238,32 @@ export const GenerateForm = () => {
                         </div>
                     )}
 
-                    <div>
-                        <label
-                            htmlFor="prompt"
-                            className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    <div className="flex items-center justify-between">
+                        <Label htmlFor="prompt">Prompt</Label>
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={handleEnhancePrompt}
+                            disabled={isGenerating || isEnhancingPrompt}
+                            className="cursor-pointer gap-1 text-xs"
                         >
-                            Prompt
-                        </label>
+                            {isEnhancingPrompt ? (
+                                <Loader2 className="h-3 w-3 animate-spin" />
+                            ) : (
+                                <Sparkles className="h-3 w-3" />
+                            )}
+                            {isEnhancingPrompt ? 'Enhancing...' : 'Enhance Prompt'}
+                        </Button>
+                    </div>
+
+                    <div>
                         <Textarea
                             id="prompt"
                             placeholder="Enter your prompt here..."
                             className="mt-2 min-h-[200px]"
                             value={prompt}
                             onChange={e => setPrompt(e.target.value)}
-                            disabled={isGenerating}
+                            disabled={isGenerating || isEnhancingPrompt}
                         />
                     </div>
 
@@ -263,7 +299,7 @@ export const GenerateForm = () => {
                                             min={256}
                                             max={1024}
                                             step={64}
-                                            disabled={isGenerating}
+                                            disabled={isGenerating || isEnhancingPrompt}
                                         />
                                     </div>
                                     <div className="space-y-2">
@@ -281,7 +317,7 @@ export const GenerateForm = () => {
                                             min={256}
                                             max={1024}
                                             step={64}
-                                            disabled={isGenerating}
+                                            disabled={isGenerating || isEnhancingPrompt}
                                         />
                                     </div>
                                 </div>
@@ -300,7 +336,7 @@ export const GenerateForm = () => {
                                                 guidanceScale: value[0],
                                             }))
                                         }
-                                        disabled={isGenerating}
+                                        disabled={isGenerating || isEnhancingPrompt}
                                     />
                                     <div className="text-muted-foreground text-sm">
                                         {options.guidanceScale}
@@ -321,7 +357,7 @@ export const GenerateForm = () => {
                                                 numInferenceSteps: value[0],
                                             }))
                                         }
-                                        disabled={isGenerating}
+                                        disabled={isGenerating || isEnhancingPrompt}
                                     />
                                     <div className="text-muted-foreground text-sm">
                                         {options.numInferenceSteps}
@@ -329,9 +365,9 @@ export const GenerateForm = () => {
                                 </div>
 
                                 <div className="flex items-center justify-between">
-                                    <Label htmlFor="randomizeSeed">Randomize Seed</Label>
+                                    <Label htmlFor="randomize">Randomize Seed</Label>
                                     <Switch
-                                        id="randomizeSeed"
+                                        id="randomize"
                                         checked={options.randomize}
                                         onCheckedChange={checked =>
                                             setOptions(prev => ({
@@ -339,7 +375,7 @@ export const GenerateForm = () => {
                                                 randomize: checked,
                                             }))
                                         }
-                                        disabled={isGenerating}
+                                        disabled={isGenerating || isEnhancingPrompt}
                                     />
                                 </div>
 
@@ -356,7 +392,7 @@ export const GenerateForm = () => {
                                                     seed: parseInt(e.target.value),
                                                 }))
                                             }
-                                            disabled={isGenerating}
+                                            disabled={isGenerating || isEnhancingPrompt}
                                         />
                                     </div>
                                 )}
@@ -367,7 +403,7 @@ export const GenerateForm = () => {
                     <Button
                         className="w-full"
                         onClick={handleGenerate}
-                        disabled={isGenerating || !prompt.trim()}
+                        disabled={isGenerating || isEnhancingPrompt || !prompt.trim()}
                     >
                         {isGenerating ? (
                             <>
