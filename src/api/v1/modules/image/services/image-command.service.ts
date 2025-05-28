@@ -10,6 +10,9 @@ import { USER_TOKENS } from 'src/api/v1/modules/user/constants/inject-token';
 import { IUserQueryService } from 'src/api/v1/modules/user/interfaces/user-query.service.interface';
 import { IImageQueryRepository } from 'src/api/v1/modules/image/interfaces/image-query.repository.interface';
 import { ImageWhereInput } from 'src/api/v1/modules/image/types/query.type';
+import { IImageQueryService } from 'src/api/v1/modules/image/interfaces/image-query.service.interface';
+import { CLOUDINARY_TOKENS } from 'src/api/v1/modules/cloudinary/constants/inject-token';
+import { ICloudinaryService } from 'src/api/v1/modules/cloudinary/interfaces/cloudinary.service.interface';
 
 @Injectable()
 export class ImageCommandService implements IImageCommandService {
@@ -22,6 +25,10 @@ export class ImageCommandService implements IImageCommandService {
         private readonly imageQueryRepository: IImageQueryRepository,
         @Inject(USER_TOKENS.SERVICES.QUERY)
         private readonly UserQueryService: IUserQueryService,
+        @Inject(IMAGE_TOKENS.SERVICES.QUERY)
+        private readonly imageQueryService: IImageQueryService,
+        @Inject(CLOUDINARY_TOKENS.PROVIDER)
+        private readonly uploadService: ICloudinaryService,
     ) {}
 
     async create(createImageDto: CreateImageDto): Promise<Image> {
@@ -54,6 +61,9 @@ export class ImageCommandService implements IImageCommandService {
 
     async delete(id: string): Promise<Image> {
         this.logger.log(`Deleting image: ${id}`, ImageCommandService.name);
+        const existingImage = await this.imageQueryService.findById(id);
+        this.uploadService.deleteImage(existingImage!.publicId);
+
         return this.imageCommandRepository.delete(id);
     }
 }
