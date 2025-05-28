@@ -51,7 +51,7 @@ jobs:
             cd app/client
             docker stop ${{ env.CONTAINER_NAME }} || true
             docker rm ${{ env.CONTAINER_NAME }} || true
-            docker rmi ${{ secrets.IMAGE_NAME }} || true
+            docker rmi ${{ secrets.DOCKER_USERNAME }}/${{ secrets.IMAGE_NAME }}:latest
             docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.IMAGE_NAME }}:latest
             docker run -d \
               --name ${{ env.CONTAINER_NAME }} \
