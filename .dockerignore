@@ -1,0 +1,27 @@
+# Dependencies
+node_modules
+*.log
+*.md
+
+# Build output
+dist
+build
+.next
+
+# IDE files
+.idea
+.vscode
+*.swp
+*.swo
+
+# Git
+.git
+.gitignore
+
+# Test files
+coverage
+.nyc_output
+
+# Docker
+Dockerfile
+.dockerignore
