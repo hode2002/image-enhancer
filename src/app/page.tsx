@@ -45,7 +45,7 @@ export default function Home() {
                 </div>
             </section>
 
-            <div className="bg-card container mx-auto rounded-lg border p-6 shadow-sm">
+            <div className="container mx-auto rounded-lg border p-6 shadow-sm">
                 <h2 className="mb-6 text-2xl font-semibold">Generate Image With AI</h2>
                 <GenerateForm />
             </div>

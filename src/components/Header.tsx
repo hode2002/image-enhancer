@@ -16,14 +16,12 @@ const Header = () => {
                 <ThemeToggle />
             </div>
             <div className="flex items-center gap-4">
-                <SignedIn>
-                    <Navbar />
-                </SignedIn>
                 <SignedOut>
                     <CustomSignInButton />
                     <CustomSignUpButton />
                 </SignedOut>
                 <SignedIn>
+                    <Navbar />
                     <UserButton />
                 </SignedIn>
             </div>
