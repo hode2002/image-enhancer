@@ -10,6 +10,7 @@ import { ClerkClientProvider } from 'src/common/providers/clerk-client.provider'
 import { WinstonModule } from 'nest-winston';
 import { winstonLogger } from './common/loggers/logger';
 import { ImageModule } from 'src/api/v1/modules/image/image.module';
+import { HealthModule } from 'src/api/v1/modules/health/health.module';
 
 @Module({
     imports: [
@@ -25,6 +26,7 @@ import { ImageModule } from 'src/api/v1/modules/image/image.module';
         AuthModule,
         UserModule,
         ImageModule,
+        HealthModule,
     ],
     providers: [ClerkClientProvider],
 })
