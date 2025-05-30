@@ -11,6 +11,8 @@ RUN pnpm install --frozen-lockfile
 
 COPY prisma ./prisma/
 
+RUN pnpm run prisma:generate
+
 COPY . .
 
 RUN pnpm run build
@@ -31,4 +33,4 @@ COPY --from=builder /app/server/dist ./dist
 
 EXPOSE 3001
 
-CMD ["sh", "-c", "pnpm run prisma:migrate:deploy && pnpm run prisma:generate && pnpm run start:prod"]
+CMD ["sh", "-c", "pnpm run prisma:migrate:deploy && pnpm run start:prod"]
