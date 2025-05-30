@@ -8,7 +8,7 @@ import { MediaModule } from './api/v1/modules/media/media.module';
 import { ClerkClientProvider } from 'src/common/providers/clerk-client.provider';
 
 import { WinstonModule } from 'nest-winston';
-import { winstonLogger } from 'src/common/loggers/logger';
+import { winstonLogger } from './common/loggers/logger';
 import { ImageModule } from 'src/api/v1/modules/image/image.module';
 
 @Module({

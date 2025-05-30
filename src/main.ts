@@ -6,6 +6,9 @@ import { ConfigService } from '@nestjs/config';
 import cookieParser from 'cookie-parser';
 import compression from 'compression';
 import helmet from 'helmet';
+import { winstonLoggerConfig } from './common/loggers/logger';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { Logger } from 'winston';
 
 const allowedOrigins = process.env.ALLOWED_ORIGINS;
 
@@ -25,11 +28,12 @@ const corsOptions: CorsOptions = {
 };
 
 async function bootstrap() {
-    const app = await NestFactory.create(AppModule);
+    const app = await NestFactory.create(AppModule, {
+        logger: winstonLoggerConfig,
+    });
     const configService = app.get(ConfigService);
 
     app.enableCors(corsOptions);
-
     app.use(helmet());
     app.use(compression());
     app.use(cookieParser());
@@ -38,6 +42,9 @@ async function bootstrap() {
 
     const port = configService.get<number>('PORT') || 3001;
     await app.listen(port);
+
+    const logger = app.get<Logger>(WINSTON_MODULE_PROVIDER);
+    logger.info(`Application is running on: http://localhost:${port}`);
 }
 
 bootstrap();
