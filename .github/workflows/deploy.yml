@@ -6,8 +6,8 @@ on:
       - main
 
 env:
-  CONTAINER_NAME: nest-image-api
-  IMAGE_NAME: api
+  CONTAINER_NAME: api
+  IMAGE_NAME: nest-image-api
 
 jobs:
   deploy:
