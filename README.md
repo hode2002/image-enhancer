@@ -102,3 +102,22 @@ Run the container:
 ```bash
 docker run -p 3000:3000 nest-image-client
 ```
+
+## 🖼️ Images
+
+### 🔐 Signin
+![Signin](/public/images/signin.png)
+
+### 🏠 Homepage
+![Homepage](/public/images/homepage-1.png)
+![Homepage](/public/images/homepage-2.png)
+
+### 📤 Upload
+![Upload](/public/images/upload.png)
+
+### 🎨 Transform
+![Transform](/public/images/transform.png)
+![Transform Detail](/public/images/transform-detail.png)
+
+### 🖼️ Background Removal
+![Background Removal](/public/images/remove-background.png)
