@@ -117,7 +117,7 @@ const ImageGrid = ({ label, urlToRedirect }: props) => {
                                     {label}
                                 </Button>
                                 <Button
-                                    className="cursor-pointer"
+                                    className="hidden cursor-pointer md:flex"
                                     variant="destructive"
                                     size="icon"
                                     onClick={() => handleDeleteClick(image.id)}
@@ -125,6 +125,14 @@ const ImageGrid = ({ label, urlToRedirect }: props) => {
                                     <Trash />
                                 </Button>
                             </div>
+                            <Button
+                                className="absolute top-0 right-0 flex cursor-pointer flex-col items-center justify-center gap-2 md:hidden"
+                                variant="destructive"
+                                size="icon"
+                                onClick={() => handleDeleteClick(image.id)}
+                            >
+                                <Trash />
+                            </Button>
                         </div>
                     ))}
                 </div>
