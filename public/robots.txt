@@ -1,0 +1,39 @@
+# Global rules
+User-agent: *
+Allow: /
+Disallow: /auth-success/
+Disallow: /_next/
+Disallow: /static/
+
+# Google specific rules
+User-agent: Googlebot
+Allow: /
+Disallow: /auth-success/
+Disallow: /_next/
+Disallow: /static/
+
+# Bing specific rules
+User-agent: Bingbot
+Allow: /
+Disallow: /auth-success/
+Disallow: /_next/
+Disallow: /static/
+
+# Block AI crawlers
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+# Crawl-delay directives
+Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://image.hovande.id.vn/sitemap.xml 
