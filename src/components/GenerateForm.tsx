@@ -451,7 +451,7 @@ export const GenerateForm = () => {
                                 </div>
                             ) : (
                                 <Image
-                                    src="/dino.png"
+                                    src="/dino.webp"
                                     alt="Generated image"
                                     fill
                                     className="rounded-lg object-contain"
